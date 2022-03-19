@@ -17,5 +17,15 @@ def test_stack_push():
 
     assert s.size == 2
 
-    assert s.pop() == None
+    assert s.pop() is None
     assert s.pop() == 'test'
+
+
+def test_iter_stack():
+    s = Stack()
+    test_datas = [1, 2, 3, 4, 5]
+    for x in test_datas:
+        s.push(x)
+
+    for item in s:
+        assert item == test_datas.pop()

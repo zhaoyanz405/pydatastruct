@@ -1,7 +1,4 @@
-class Node:
-    def __init__(self):
-        self.item = None
-        self.next = None
+from collection.node import Node, iter_nodes
 
 
 class Stack:
@@ -25,3 +22,6 @@ class Stack:
         self.size -= 1
 
         return item
+
+    def __iter__(self):
+        return iter_nodes(self.first)
