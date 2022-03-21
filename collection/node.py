@@ -3,11 +3,9 @@ class Node:
         self.item = None
         self.next = None
 
+    def __next__(self):
+        if self.next is None:
+            raise StopIteration
 
-def iter_nodes(node):
-    while True:
-        yield node.item
-        if not node.next:
-            break
-
-        node = node.next
+        self = self.next
+        return self
