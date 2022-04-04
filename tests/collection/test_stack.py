@@ -1,3 +1,5 @@
+import pytest
+
 from collection.stack import Stack
 
 
@@ -21,7 +23,7 @@ def test_stack_push():
     assert s.pop() == 'test'
 
 
-def test_iter_stack():
+def test_stack_iteration():
     s = Stack()
     test_datas = [1, 2, 3, 4, 5]
     for x in test_datas:
@@ -29,3 +31,54 @@ def test_iter_stack():
 
     for item in s:
         assert item == test_datas.pop()
+
+
+def test_stack_iter_exception():
+    s = Stack()
+    with pytest.raises(StopIteration):
+        next(s)
+
+
+def test_stack_parentheses_correct():
+    match_map = {
+        '[': ']',
+        '{': '}',
+        '(': ')',
+    }
+    inputs = "[()]{}{[()()]()}"
+    s = Stack()
+    for i in inputs:
+        if s.is_empty():
+            s.push(i)
+        else:
+            if match_map[s.first.item] == i:
+                s.pop()
+            else:
+                s.push(i)
+        try:
+            print(list(s))
+        except AttributeError:
+            print("empty stack")
+
+    assert s.size == 0
+
+
+def test_stack_parentheses_wrong():
+    match_map = {
+        '[': ']',
+        '{': '}',
+        '(': ')',
+    }
+    inputs = "[{})"
+
+    s = Stack()
+    for i in inputs:
+        if s.is_empty():
+            s.push(i)
+        else:
+            if match_map[s.first.item] == i:
+                s.pop()
+            else:
+                s.push(i)
+
+    assert s.size != 0
