@@ -26,11 +26,18 @@ def test_stack_push():
 def test_stack_iteration():
     s = Stack()
     test_datas = [1, 2, 3, 4, 5]
+    reverse_td = [5, 4, 3, 2, 1]
     for x in test_datas:
         s.push(x)
 
-    for item in s:
-        assert item == test_datas.pop()
+    for idx, item in enumerate(s):
+        assert item == reverse_td[idx]
+
+    iter(s)
+    assert s._cur_node is None
+
+    for idx, item in enumerate(s):
+        assert item == reverse_td[idx]
 
 
 def test_stack_iter_exception():
