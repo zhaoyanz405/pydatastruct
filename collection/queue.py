@@ -1,17 +1,18 @@
 """
 FIFO
 """
-from collection.node import Node, iter_nodes
+from collection.node import Node
 
 
 class EmptyQueueError(Exception):
     pass
 
 
-class Queue:
+class ListQueue:
 
     def __init__(self):
         self.data = []
+        self._idx = 0
 
     @property
     def size(self):
@@ -20,16 +21,30 @@ class Queue:
     def is_empty(self):
         return self.size == 0
 
-    def put(self, item):
+    def enqueue(self, item):
         self.data.append(item)
 
-    def get(self):
+    def dequeue(self):
         if self.is_empty():
             raise EmptyQueueError
 
         v = self.data[0]
         del self.data[0]
         return v
+
+    def __next__(self):
+        try:
+            value = self.data[self._idx]
+        except IndexError:
+            raise StopIteration
+
+        self._idx += 1
+
+        return value
+
+    def __iter__(self):
+        self._idx = 0
+        return self
 
 
 class NodeQueue:
@@ -38,6 +53,7 @@ class NodeQueue:
         self.first = None
         self.last = None
         self.size = 0
+        self._cur_node = None
 
     def is_empty(self):
         return self.first is None
@@ -66,8 +82,20 @@ class NodeQueue:
         self.size -= 1
         return item
 
+    def __next__(self):
+        if self.is_empty():
+            raise StopIteration
+
+        if self._cur_node is None:
+            self._cur_node = self.first
+        else:
+            self._cur_node = next(self._cur_node)
+
+        return self._cur_node.item
+
     def __iter__(self):
-        return iter_nodes(self.first)
+        self._cur_node = None
+        return self
 
 
-Queue = NodeQueue
+Queue = ListQueue
